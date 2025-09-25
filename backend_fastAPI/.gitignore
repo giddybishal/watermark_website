@@ -1,0 +1,4 @@
+backend_fastAPI/venv/
+backend_fastAPI/__pycache__/
+backend_fastAPI/*.py[cod]
+backend_fastAPI/.env
