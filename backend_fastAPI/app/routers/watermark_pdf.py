@@ -12,9 +12,7 @@ router = APIRouter(
 
 @router.post("/watermark")
 async def watermark_pdf(pdf: UploadFile = File(...), watermark: UploadFile = File(...)):
-    # -------------------------
     # Validate file types
-    # -------------------------
     if pdf.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Uploaded file is not a valid PDF.")
 
@@ -22,9 +20,7 @@ async def watermark_pdf(pdf: UploadFile = File(...), watermark: UploadFile = Fil
     if watermark.content_type not in allowed_image_types:
         raise HTTPException(status_code=400, detail=f"Watermark must be one of: {', '.join(allowed_image_types)}")
 
-    # -------------------------
     # Load PDF and watermark in memory
-    # -------------------------
     pdf_bytes = await pdf.read()
     main_pdf = PdfReader(io.BytesIO(pdf_bytes))
     first_page = main_pdf.pages[0]
@@ -46,24 +42,18 @@ async def watermark_pdf(pdf: UploadFile = File(...), watermark: UploadFile = Fil
     watermark_pdf = PdfReader(buffer)
     watermark_page = watermark_pdf.pages[0]
 
-    # -------------------------
     # Merge watermark
-    # -------------------------
     writer = PdfWriter()
     for page in main_pdf.pages:
         page.merge_page(watermark_page)
         writer.add_page(page)
 
-    # -------------------------
     # Output final PDF in memory
-    # -------------------------
     output_buffer = io.BytesIO()
     writer.write(output_buffer)
     output_buffer.seek(0)
 
-    # -------------------------
     # Set filename for download
-    # -------------------------
     original_name = os.path.splitext(pdf.filename)[0]
     watermarked_name = f"{original_name}_watermarked.pdf"
 
