@@ -10,7 +10,7 @@ router = APIRouter(
     tags=["watermark"],
 )
 
-@router.post("/watermark")
+@router.post("/pdf")
 async def watermark_pdf(pdf: UploadFile = File(...), watermark: UploadFile = File(...)):
     # Validate file types
     if pdf.content_type != "application/pdf":
